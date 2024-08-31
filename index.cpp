@@ -11,18 +11,18 @@ private:
 public:
     TrafficLight(string dir)
     {
-        direction = dir;
-        state = "RED";
+        this->direction = dir;
+        this->state = "RED";
     }
 
     void changeState(string newState)
     {
-        state = newState;
+        this->state = newState;
     }
 
     string status() const
     {
-        return direction + " Light: " + state;
+        return this->direction + " Light: " + this->state;
     }
 };
 
@@ -35,13 +35,13 @@ protected:
 public:
     Vehicle(int id, string dir)
     {
-        vehicle_id = id;
-        direction = dir;
+        this->vehicle_id = id;
+        this->direction = dir;
     }
 
     virtual string status() const
     {
-        return "Vehicle " + to_string(vehicle_id) + " heading " + direction;
+        return "Vehicle " + to_string(this->vehicle_id) + " heading " + this->direction;
     }
 };
 
@@ -52,7 +52,7 @@ public:
 
     string status() const override
     {
-        return "Car " + to_string(vehicle_id) + " heading " + direction;
+        return "Car " + to_string(this->vehicle_id) + " heading " + this->direction;
     }
 };
 
@@ -63,7 +63,7 @@ public:
 
     string status() const override
     {
-        return "Bus " + to_string(vehicle_id) + " heading " + direction;
+        return "Bus " + to_string(this->vehicle_id) + " heading " + this->direction;
     }
 };
 
@@ -87,7 +87,9 @@ int main()
     Bus bus1(2, "North");
 
     cout << light.status() << endl;
+
     light.changeState("GREEN");
+
     cout << light.status() << endl;
 
     cout << car1.status() << endl;
