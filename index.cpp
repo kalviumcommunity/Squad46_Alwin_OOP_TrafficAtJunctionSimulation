@@ -43,6 +43,8 @@ public:
     {
         return "Vehicle " + to_string(this->vehicle_id) + " heading " + this->direction;
     }
+
+    virtual ~Vehicle() {} // Virtual destructor for proper cleanup
 };
 
 class Car : public Vehicle
@@ -81,27 +83,33 @@ int main()
 {
     displayDirections();
 
-    TrafficLight light("North");
+    // Use dynamic memory allocation for TrafficLight
+    TrafficLight *light = new TrafficLight("North");
 
-    // Create vehicle objects
-    Car car1(1, "North");
-    Bus bus1(2, "North");
-    Car car2(3, "North");
-
-    // Use a static array of Vehicle pointers
+    // Create vehicle objects using dynamic memory allocation
     const int numVehicles = 3;
-    Vehicle *vehicles[numVehicles] = {&car1, &bus1, &car2};
+    Vehicle *vehicles[numVehicles];
+    vehicles[0] = new Car(1, "North");
+    vehicles[1] = new Bus(2, "North");
+    vehicles[2] = new Car(3, "North");
 
-    cout << light.status() << endl;
+    cout << light->status() << endl;
 
-    light.changeState("GREEN");
+    light->changeState("GREEN");
 
-    cout << light.status() << endl;
+    cout << light->status() << endl;
 
     // Display vehicle statuses
     for (int i = 0; i < numVehicles; ++i)
     {
         cout << vehicles[i]->status() << endl;
+    }
+
+    // Clean up dynamically allocated memory
+    delete light;
+    for (int i = 0; i < numVehicles; ++i)
+    {
+        delete vehicles[i];
     }
 
     return 0;
