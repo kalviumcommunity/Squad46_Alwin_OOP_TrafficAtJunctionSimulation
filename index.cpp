@@ -83,8 +83,14 @@ int main()
 
     TrafficLight light("North");
 
+    // Create vehicle objects
     Car car1(1, "North");
     Bus bus1(2, "North");
+    Car car2(3, "North");
+
+    // Use a static array of Vehicle pointers
+    const int numVehicles = 3;
+    Vehicle *vehicles[numVehicles] = {&car1, &bus1, &car2};
 
     cout << light.status() << endl;
 
@@ -92,8 +98,11 @@ int main()
 
     cout << light.status() << endl;
 
-    cout << car1.status() << endl;
-    cout << bus1.status() << endl;
+    // Display vehicle statuses
+    for (int i = 0; i < numVehicles; ++i)
+    {
+        cout << vehicles[i]->status() << endl;
+    }
 
     return 0;
 }
