@@ -46,6 +46,16 @@ public:
     {
         return "Vehicle " + to_string(this->vehicle_id) + " heading " + this->direction;
     }
+
+    static int getVehicleCount() // Static method to access vehicle count
+    {
+        return vehicleCount;
+    }
+
+    virtual ~Vehicle()
+    {
+        --vehicleCount;
+    }
 };
 
 // Initialize the static variable
@@ -109,12 +119,16 @@ int main()
         cout << vehicles[i]->status() << endl;
     }
 
+    cout << "Total number of vehicles: " << Vehicle::getVehicleCount() << endl;
+
     // Clean up dynamically allocated memory
     delete light;
     for (int i = 0; i < numVehicles; ++i)
     {
         delete vehicles[i];
     }
+
+    cout << "Total number of vehicles after cleanup: " << Vehicle::getVehicleCount() << endl;
 
     return 0;
 }
