@@ -32,20 +32,24 @@ protected:
     int vehicle_id;
     string direction;
 
+    static int vehicleCount;
+
 public:
     Vehicle(int id, string dir)
     {
         this->vehicle_id = id;
         this->direction = dir;
+        ++vehicleCount;
     }
 
     virtual string status() const
     {
         return "Vehicle " + to_string(this->vehicle_id) + " heading " + this->direction;
     }
-
-    virtual ~Vehicle() {} // Virtual destructor for proper cleanup
 };
+
+// Initialize the static variable
+int Vehicle::vehicleCount = 0;
 
 class Car : public Vehicle
 {
