@@ -42,10 +42,7 @@ public:
         ++vehicleCount;
     }
 
-    virtual string status() const
-    {
-        return "Vehicle " + to_string(this->vehicle_id) + " heading " + this->direction;
-    }
+    virtual string status() const = 0;
 
     static int getVehicleCount() // Static method to access vehicle count
     {
@@ -101,11 +98,12 @@ int main()
     TrafficLight *light = new TrafficLight("North");
 
     // Create vehicle objects using dynamic memory allocation
-    const int numVehicles = 3;
+    const int numVehicles = 4;
     Vehicle *vehicles[numVehicles];
     vehicles[0] = new Car(1, "North");
     vehicles[1] = new Bus(2, "North");
     vehicles[2] = new Car(3, "North");
+    vehicles[3] = new Car(4, "North");
 
     cout << light->status() << endl;
 
@@ -123,7 +121,7 @@ int main()
 
     // Clean up dynamically allocated memory
     delete light;
-    for (int i = 0; i < numVehicles; ++i)
+    for (int i = 0; i < 4; ++i)
     {
         delete vehicles[i];
     }
