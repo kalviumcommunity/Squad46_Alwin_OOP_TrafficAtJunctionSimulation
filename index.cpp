@@ -1,63 +1,101 @@
 #include <iostream>
+#include <vector>
 
 using namespace std;
 
+// Class responsible for managing light states
+class LightStateManager
+{
+private:
+    string state;
+
+public:
+    LightStateManager() : state("RED") {}
+
+    void setState(const string &newState)
+    {
+        this->state = newState;
+    }
+
+    string getState() const
+    {
+        return state;
+    }
+};
+
+// Class responsible for traffic light operations
 class TrafficLight
 {
 private:
     string direction;
-    string state;
+    LightStateManager stateManager;
 
 public:
     TrafficLight(string dir)
     {
         this->direction = dir;
-        this->state = "RED";
     }
 
     void changeState(string newState)
     {
-        this->state = newState;
+        stateManager.setState(newState);
     }
 
     string status() const
     {
-        return this->direction + " Light: " + this->state;
+        return this->direction + " Light: " + stateManager.getState();
     }
 };
 
+// Class responsible for vehicle counting
+class VehicleRegistry
+{
+private:
+    static int vehicleCount;
+
+public:
+    static void registerVehicle()
+    {
+        ++vehicleCount;
+    }
+
+    static void unregisterVehicle()
+    {
+        --vehicleCount;
+    }
+
+    static int getCount()
+    {
+        return vehicleCount;
+    }
+};
+
+int VehicleRegistry::vehicleCount = 0;
+
+// Base class for vehicles
 class Vehicle
 {
 protected:
     int vehicle_id;
     string direction;
 
-    static int vehicleCount;
-
 public:
     Vehicle(int id, string dir)
     {
         this->vehicle_id = id;
         this->direction = dir;
-        ++vehicleCount;
+        VehicleRegistry::registerVehicle();
     }
 
     virtual string status() const = 0;
 
-    static int getVehicleCount() // Static method to access vehicle count
-    {
-        return vehicleCount;
-    }
-
     virtual ~Vehicle()
     {
-        --vehicleCount;
+        VehicleRegistry::unregisterVehicle();
     }
 };
 
-// Initialize the static variable
-int Vehicle::vehicleCount = 0;
-
+// Specific vehicle types
 class Car : public Vehicle
 {
 public:
@@ -80,24 +118,39 @@ public:
     }
 };
 
-void displayDirections()
+// Class responsible for displaying information
+class DisplayManager
 {
-    cout << "Directions:" << endl;
-    cout << "^ North" << endl;
-    cout << "v South" << endl;
-    cout << "-> East" << endl;
-    cout << "<- West" << endl;
-    cout << endl;
-}
+public:
+    static void displayDirections()
+    {
+        cout << "Directions:" << endl;
+        cout << "^ North" << endl;
+        cout << "v South" << endl;
+        cout << "-> East" << endl;
+        cout << "<- West" << endl;
+        cout << endl;
+    }
+
+    static void displayStatus(const string &status)
+    {
+        cout << status << endl;
+    }
+
+    static void displayVehicleCount()
+    {
+        cout << "Total number of vehicles: " << VehicleRegistry::getCount() << endl;
+    }
+};
 
 int main()
 {
-    displayDirections();
+    DisplayManager::displayDirections();
 
-    // Use dynamic memory allocation for TrafficLight
+    // Create traffic light
     TrafficLight *light = new TrafficLight("North");
 
-    // Create vehicle objects using dynamic memory allocation
+    // Create vehicles
     const int numVehicles = 4;
     Vehicle *vehicles[numVehicles];
     vehicles[0] = new Car(1, "North");
@@ -105,28 +158,27 @@ int main()
     vehicles[2] = new Car(3, "North");
     vehicles[3] = new Car(4, "North");
 
-    cout << light->status() << endl;
+    // Display initial state
+    DisplayManager::displayStatus(light->status());
 
+    // Change and display new state
     light->changeState("GREEN");
-
-    cout << light->status() << endl;
+    DisplayManager::displayStatus(light->status());
 
     // Display vehicle statuses
     for (int i = 0; i < numVehicles; ++i)
     {
-        cout << vehicles[i]->status() << endl;
+        DisplayManager::displayStatus(vehicles[i]->status());
     }
 
-    cout << "Total number of vehicles: " << Vehicle::getVehicleCount() << endl;
+    DisplayManager::displayVehicleCount();
 
-    // Clean up dynamically allocated memory
+    // Cleanup
     delete light;
-    for (int i = 0; i < 4; ++i)
+    for (int i = 0; i < numVehicles; ++i)
     {
         delete vehicles[i];
     }
-
-    cout << "Total number of vehicles after cleanup: " << Vehicle::getVehicleCount() << endl;
 
     return 0;
 }
