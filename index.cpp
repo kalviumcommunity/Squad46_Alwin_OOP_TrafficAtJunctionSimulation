@@ -3,23 +3,64 @@
 
 using namespace std;
 
+// Abstract class for traffic light states
+class LightState
+{
+public:
+    virtual string getState() const = 0;
+    virtual ~LightState() = default;
+};
+
+class RedState : public LightState
+{
+public:
+    string getState() const override
+    {
+        return "RED";
+    }
+};
+
+class GreenState : public LightState
+{
+public:
+    string getState() const override
+    {
+        return "GREEN";
+    }
+};
+
+class YellowState : public LightState
+{
+public:
+    string getState() const override
+    {
+        return "YELLOW";
+    }
+};
+
 // Class responsible for managing light states
 class LightStateManager
 {
 private:
-    string state;
+    LightState *currentState;
 
 public:
-    LightStateManager() : state("RED") {}
+    LightStateManager() : currentState(new RedState()) {}
 
-    void setState(const string &newState)
+    void setState(LightState *newState)
     {
-        this->state = newState;
+        delete currentState;
+        currentState = newState;
     }
 
     string getState() const
     {
-        return state;
+        return currentState->getState();
+    }
+
+    ~LightStateManager()
+    {
+        delete currentState;
     }
 };
 
@@ -31,12 +72,9 @@ private:
     LightStateManager stateManager;
 
 public:
-    TrafficLight(string dir)
-    {
-        this->direction = dir;
-    }
+    TrafficLight(string dir) : direction(dir) {}
 
-    void changeState(string newState)
+    void changeState(LightState *newState)
     {
         stateManager.setState(newState);
     }
@@ -162,7 +200,11 @@ int main()
     DisplayManager::displayStatus(light->status());
 
     // Change and display new state
-    light->changeState("GREEN");
+    light->changeState(new GreenState());
+    DisplayManager::displayStatus(light->status());
+
+    // Change state again
+    light->changeState(new YellowState());
     DisplayManager::displayStatus(light->status());
 
     // Display vehicle statuses
