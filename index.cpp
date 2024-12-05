@@ -156,6 +156,17 @@ public:
     }
 };
 
+class Motorcycle : public Vehicle
+{
+public:
+    Motorcycle(int id, string dir) : Vehicle(id, dir) {}
+
+    string status() const override
+    {
+        return "Motorcycle " + to_string(this->vehicle_id) + " heading " + this->direction;
+    }
+};
+
 // Class responsible for displaying information
 class DisplayManager
 {
@@ -189,12 +200,13 @@ int main()
     TrafficLight *light = new TrafficLight("North");
 
     // Create vehicles
-    const int numVehicles = 4;
+    const int numVehicles = 5;
     Vehicle *vehicles[numVehicles];
     vehicles[0] = new Car(1, "North");
     vehicles[1] = new Bus(2, "North");
     vehicles[2] = new Car(3, "North");
     vehicles[3] = new Car(4, "North");
+    vehicles[4] = new Motorcycle(5, "North");
 
     // Display initial state
     DisplayManager::displayStatus(light->status());
